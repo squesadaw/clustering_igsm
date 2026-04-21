@@ -1,4 +1,5 @@
 
+import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -15,6 +16,7 @@ from sklearn.preprocessing import StandardScaler
 # =========================================================
 
 ARCHIVO = "IGSM 2025 - Detalle de cada municipalidad 2025.csv"
+OUTPUT_DIR = "resultados"
 RANDOM_STATE = 42
 K_MIN = 2
 K_MAX = 5
@@ -170,7 +172,7 @@ def graficar_metricas(df_metricas):
     plt.title("Método del codo")
     plt.grid(True, alpha=0.3)
     plt.tight_layout()
-    plt.savefig("igsm_elbow.png", dpi=200)
+    plt.savefig(os.path.join(OUTPUT_DIR, "igsm_elbow.png"), dpi=200)
     plt.close()
 
     plt.figure(figsize=(8, 5))
@@ -180,7 +182,7 @@ def graficar_metricas(df_metricas):
     plt.title("Calidad del clustering según silhouette")
     plt.grid(True, alpha=0.3)
     plt.tight_layout()
-    plt.savefig("igsm_silhouette.png", dpi=200)
+    plt.savefig(os.path.join(OUTPUT_DIR, "igsm_silhouette.png"), dpi=200)
     plt.close()
 
 
@@ -205,7 +207,7 @@ def graficar_pca(X_scaled, etiquetas):
     plt.legend()
     plt.grid(True, alpha=0.3)
     plt.tight_layout()
-    plt.savefig("igsm_clusters_pca.png", dpi=200)
+    plt.savefig(os.path.join(OUTPUT_DIR, "igsm_clusters_pca.png"), dpi=200)
     plt.close()
 
     return df_pca, pca.explained_variance_ratio_
@@ -222,6 +224,8 @@ def graficar_pca(X_scaled, etiquetas):
 
 def main():
     print("=== CLUSTERING IGSM ===")
+
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 
 
@@ -293,12 +297,12 @@ def main():
 
 
     # 8. Guardar salidas
-    metricas.to_csv("igsm_metricas_kmeans.csv", index=False)
-    asignaciones.to_csv("igsm_clusters_municipalidades.csv", index=False)
-    medias_cluster.to_csv("igsm_resumen_clusters.csv")
-    totales.to_csv("igsm_madurez_total_por_cluster.csv")
-    provincias.to_csv("igsm_provincias_por_cluster.csv")
-    df_pca.to_csv("igsm_pca_componentes.csv", index=False)
+    metricas.to_csv(os.path.join(OUTPUT_DIR, "igsm_metricas_kmeans.csv"), index=False)
+    asignaciones.to_csv(os.path.join(OUTPUT_DIR, "igsm_clusters_municipalidades.csv"), index=False)
+    medias_cluster.to_csv(os.path.join(OUTPUT_DIR, "igsm_resumen_clusters.csv"))
+    totales.to_csv(os.path.join(OUTPUT_DIR, "igsm_madurez_total_por_cluster.csv"))
+    provincias.to_csv(os.path.join(OUTPUT_DIR, "igsm_provincias_por_cluster.csv"))
+    df_pca.to_csv(os.path.join(OUTPUT_DIR, "igsm_pca_componentes.csv"), index=False)
 
     graficar_metricas(metricas)
 
